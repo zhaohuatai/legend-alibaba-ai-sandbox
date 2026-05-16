@@ -1,0 +1,114 @@
+version: '3.9'
+
+# Skill 运行时 Docker Compose 配置（动态挂载版）
+# 
+# 使用方式：
+# 1. 构建镜像：docker-compose build
+# 2. 启动容器（默认挂载）：docker-compose up -d skill-sandbox
+# 3. 启动容器（自定义 Session）：$env:SESSION_ID="abc123"; docker-compose up -d skill-sandbox
+# 4. 停止容器：docker-compose down
+# 5. 进入容器：docker exec -it skill-sandbox bash
+
+services:
+  skill-sandbox:
+    image: skill-sandbox:latest
+    container_name: skill-sandbox
+    
+    # 动态挂载工作区
+    # 如果设置了 SESSION_ID 环境变量，挂载 ./workspaces/{SESSION_ID}:/work
+    # 否则挂载 ./workspaces:/work
+    volumes:
+      - ${WORKSPACE_PATH:-./workspaces}:/work
+    
+    # 资源限制
+    deploy:
+      resources:
+        limits:
+          memory: 600M
+          cpus: '0.5'
+        reservations:
+          memory: 512M
+    
+    # 安全配置
+    read_only: true
+    tmpfs:
+      - /tmp:rw,size=64m
+      - /run:rw,size=32m
+    
+    # 非 root 用户
+    user: "1000:1000"
+    working_dir: /work
+    
+    # 保持容器运行
+    command: ["sleep", "infinity"]
+    
+    # 网络模式
+    networks:
+      - skill-network
+    
+    # 环境变量
+    environment:
+      - PYTHONUNBUFFERED=1
+      - NODE_ENV=production
+      - SESSION_ID=${SESSION_ID:-default}
+    
+    # 健康检查
+    healthcheck:
+      test: ["CMD", "python3", "-c", "print('OK')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  skill-browser-sandbox:
+    image: skill-sandbox-browser:latest
+    container_name: skill-browser-sandbox
+    
+    # 动态挂载工作区
+    volumes:
+      - ${WORKSPACE_PATH:-./workspaces}:/work
+    
+    # 资源限制（浏览器需要更多资源）
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+        reservations:
+          memory: 768M
+    
+    # 安全配置
+    read_only: true
+    tmpfs:
+      - /tmp:rw,size=128m
+      - /run:rw,size=32m
+    
+    # 非 root 用户
+    user: "1000:1000"
+    working_dir: /work
+    
+    # 保持容器运行
+    command: ["sleep", "infinity"]
+    
+    # 网络模式
+    networks:
+      - skill-network
+    
+    # 环境变量
+    environment:
+      - PYTHONUNBUFFERED=1
+      - NODE_ENV=production
+      - SESSION_ID=${SESSION_ID:-default}
+      - PLAYWRIGHT_BROWSERS_PATH=/home/skill/.cache/ms-playwright
+    
+    # 健康检查
+    healthcheck:
+      test: ["CMD", "node", "-e", "console.log('OK')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+networks:
+  skill-network:
+    driver: bridge

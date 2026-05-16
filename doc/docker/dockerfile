@@ -1,0 +1,117 @@
+# Skill Runtime Docker Image
+# 用于 Skill 沙箱隔离的通用运行环境
+# 
+# 基础镜像：Ubuntu 22.04
+# 镜像大小：约 1GB - 1.5GB
+
+FROM ubuntu:22.04
+
+# 避免交互式安装提示
+ENV DEBIAN_FRONTEND=noninteractive
+
+# 设置环境变量
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
+
+# 替换为国内 apt 镜像源（阿里云）
+RUN sed -i 's/archive.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list && \
+    sed -i 's/security.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list
+
+# === 第 1 步：更新 apt 缓存 ===
+RUN apt-get update
+
+# === 第 2 步：安装基础工具 ===
+RUN apt-get install -y --no-install-recommends \
+    curl \
+    wget \
+    git \
+    ca-certificates \
+    gnupg \
+    && rm -rf /var/lib/apt/lists/*
+
+# === 第 3 步：安装文本处理工具 ===
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    jq \
+    ripgrep \
+    file \
+    unzip \
+    zip \
+    dos2unix \
+    pandoc \
+    && rm -rf /var/lib/apt/lists/*
+
+# === 第 4 步：安装 PDF 处理工具 ===
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    poppler-utils \
+    # graphicsmagick \  # 已注释，减小镜像体积
+    && rm -rf /var/lib/apt/lists/*
+
+# === 第 5 步：安装数据库/网络工具 ===
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    sqlite3 \
+    iputils-ping \
+    iproute2 \
+    net-tools \
+    dnsutils \
+    && rm -rf /var/lib/apt/lists/*
+
+# === 第 6 步：安装 Python 3.11 ===
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    software-properties-common \
+    && add-apt-repository ppa:deadsnakes/ppa \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
+        python3.11 \
+        python3.11-dev \
+        python3.11-venv \
+        python3-pip \
+    && rm -rf /var/lib/apt/lists/* \
+    && update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1 \
+    && ln -s /usr/bin/python3 /usr/bin/python
+
+# === 第 7 步：安装构建工具 ===
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    make \
+    && rm -rf /var/lib/apt/lists/*
+
+# === 第 8 步：安装 Node.js LTS (18.x) ===
+RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
+    apt-get install -y nodejs && \
+    rm -rf /var/lib/apt/lists/* && \
+    npm cache clean --force
+
+# === 第 10 步：安装 pnpm (Node.js 包管理器) ===
+RUN curl -fsSL https://get.pnpm.io/v6.js | node - add --global pnpm && \
+    rm -rf /root/.npm /root/.pnpm-store
+
+# === 第 11 步：安装常用 Python 包 ===
+RUN pip3 install --no-cache-dir \
+    pypdf \
+    pdfplumber \
+    pdf2image \
+    pandas \
+    numpy \
+    openpyxl \
+    requests \
+    beautifulsoup4 \
+    lxml \
+    python-docx \
+    python-dotenv \
+    PyYAML && \
+    pip3 cache purge
+
+# === 第 12 步：创建非 root 用户 ===
+RUN useradd -m -u 1000 -s /bin/bash skill
+
+# === 第 13 步：设置工作目录 ===
+WORKDIR /work
+
+# === 第 14 步：设置权限 ===
+RUN chown -R skill:skill /work
+
+# === 第 15 步：切换到 skill 用户 ===
+USER skill
+
+# 默认命令：保持容器运行
+CMD ["sleep", "infinity"]
