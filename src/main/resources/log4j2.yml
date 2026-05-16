@@ -1,0 +1,84 @@
+Configuration:  
+  status: warn  
+  
+  Properties: 
+    Property: 
+      - name: log.level.console  
+        value: debug  
+      - name: log.level.console.warn 
+        value: debug  
+      - name: log.level.zfes  
+        value: debug         
+      - name: log.path  
+        value: ./logs  
+      - name: project.name  
+        value: legend-bss-pet-service
+    
+  Appenders:  
+    Console: 
+      name: CONSOLE
+      #Encoding: UTF-8  
+      target: SYSTEM_OUT  
+      ThresholdFilter:  
+        level: ${sys:log.level.console} # “sys:”表示：如果VM参数中没指定这个变量值，则使用本文件中定义的缺省全局变量值  
+        onMatch: ACCEPT  
+        onMismatch: DENY  
+      PatternLayout:  
+        pattern: "%d{yyyy-MM-dd HH:mm:ss,SSS} %5p  [%X{traceid}] [%X{app}] [%X{type}] [%X{spanid}] [%X{pnum}] [%X{num}] [%X{cosTime}] [%X{signature}] [%t] [%F:%L] %m%n"  
+    RollingFile: 
+      - name: ROLLING_FILE  
+        ignoreExceptions: false  
+        fileName: ${log.path}/${project.name}.log  
+        filePattern: "${log.path}/$${date:yyyy-MM}/${project.name}-%d{yyyy-MM-dd}-%i.log.gz"  
+        PatternLayout:  
+          pattern: "%d{yyyy-MM-dd HH:mm:ss,SSS} %5p  [%X{traceid}] [%X{app}] [%X{type}] [%X{spanid}] [%X{pnum}] [%X{num}] [%X{cosTime}] [%X{signature}] [%t] [%F:%L] %m%n"  
+        Policies:  
+          SizeBasedTriggeringPolicy:  
+            size: "50 MB"  
+        DefaultRolloverStrategy:  
+          max: 1000  
+          
+      - name: ROLLING_FILE_TRACE
+        ContextMapFilter:  
+           onMatch: ACCEPT
+           onMismatch: DENY
+           KeyValuePair:
+            key: type
+            value: t
+        ignoreExceptions: false  
+        fileName: ${log.path}/${project.name}_trace.log  
+        filePattern: "${log.path}/$${date:yyyy-MM}/${project.name}-%d{yyyy-MM-dd}-%i.log.gz"  
+        PatternLayout:  
+          pattern: "[%d{yyyy-MM-dd HH:mm:ss,SSS}] [%5p] [%X{traceid}] [%X{app}] [%X{type}] [%X{spanid}] [%X{pnum}] [%X{num}] [%X{cosTime}] [%X{signature}] [%t] [%F:%L] %m%n"  
+        Policies:  
+          SizeBasedTriggeringPolicy:  
+            size: "50 MB"  
+        DefaultRolloverStrategy:  
+          max: 1000  
+          
+#    Database: 
+#      name: Database 
+#      threshold: info
+#      maxBulkSize: 5
+#      maxDelayTime: 2
+#      ignoreExceptions: false 
+
+  Loggers:  
+    Root:  
+      level: info
+      AppenderRef:  
+        - ref: CONSOLE  
+        - ref: ROLLING_FILE
+        - ref: ROLLING_FILE_TRACE
+#        - ref: Database   
+    Logger:
+      - name: com.pentest
+        additivity: false  
+        level: ${sys:log.level.zfes}  
+        AppenderRef:  
+          - ref: CONSOLE  
+          - ref: ROLLING_FILE  
+          - ref: ROLLING_FILE_TRACE
+#            Filters:
+#              - traceFilter  
+#          - ref: Database

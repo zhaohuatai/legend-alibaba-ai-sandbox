@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>legend-framework</groupId>
+	<artifactId>legend-alibaba-ai-sandbox</artifactId>
+	<version>1.0.0</version>
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.deploy>deploy</project.deploy>
+		<!--<tomcat.version>10.1.9</tomcat.version>-->
+		<java.version>25</java.version>
+		
+		<!--<spring-boot-version>4.0.3</spring-boot-version>
+		<spring-version>7.0.5</spring-version>-->
+		<spring-version>6.2.17</spring-version>
+		<spring-boot-version>3.5.13</spring-boot-version>
+		
+		
+		<spring-ai-alibaba-version>1.1.2.2</spring-ai-alibaba-version>
+		
+		<spring-ai-alibaba-starter-dashscope-version>1.1.2.2</spring-ai-alibaba-starter-dashscope-version>
+		<graalvm.polyglot.version>25.0.2</graalvm.polyglot.version>
+
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+  		<maven.compiler.target>${java.version}</maven.compiler.target>
+		<maven-compiler-plugin-version>3.10.1</maven-compiler-plugin-version>
+		<maven-source-plugin-version>3.2.1</maven-source-plugin-version>
+		<maven-surefire-plugin-version>3.0.0-M4</maven-surefire-plugin-version>
+		<maven-resources-plugin-version>3.1.0</maven-resources-plugin-version>
+		
+
+		<lombok-version>1.18.42</lombok-version>
+		<mapstruct-version>1.6.3</mapstruct-version>
+		
+		<legend-framework-version>1.0.0</legend-framework-version>
+    </properties>
+    
+   <dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>${spring-boot-version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	
+	<dependencies>
+		<dependency>
+		    <groupId>com.github.docker-java</groupId>
+		    <artifactId>docker-java</artifactId>
+		    <version>3.7.1</version>
+		    <scope>compile</scope>
+		</dependency>
+
+<!-- Source: https://mvnrepository.com/artifact/com.github.docker-java/docker-java-transport-httpclient5 -->
+<dependency>
+    <groupId>com.github.docker-java</groupId>
+    <artifactId>docker-java-transport-httpclient5</artifactId>
+    <version>3.7.1</version>
+    <scope>compile</scope>
+</dependency>
+
+	
+	  <dependency>
+	    <groupId>com.alibaba.cloud.ai</groupId>
+	    <artifactId>spring-ai-alibaba-agent-framework</artifactId>
+	    <version>${spring-ai-alibaba-version}</version>
+	</dependency>
+	
+	<dependency>
+	    <groupId>com.alibaba.cloud.ai</groupId>
+	    <artifactId>spring-ai-alibaba-starter-dashscope</artifactId>
+	    <version>${spring-ai-alibaba-starter-dashscope-version}</version>
+	</dependency>
+	
+	<!-- Source: https://mvnrepository.com/artifact/com.alibaba.cloud.ai/spring-ai-alibaba-starter-tool-calling-python -->
+<dependency>
+    <groupId>com.alibaba.cloud.ai</groupId>
+    <artifactId>spring-ai-alibaba-starter-tool-calling-python</artifactId>
+    <version>${spring-ai-alibaba-version}</version>
+</dependency>
+
+<dependency>
+    <groupId>com.alibaba.cloud.ai</groupId>
+    <artifactId>spring-ai-alibaba-starter-tool-calling-python</artifactId>
+    <version>${spring-ai-alibaba-version}</version>
+</dependency>
+
+<dependency>
+    <groupId>com.alibaba.cloud.ai</groupId>
+    <artifactId>spring-ai-alibaba-starter-tool-calling-python</artifactId>
+    <version>1.1.2.2</version> <!-- Use the appropriate version -->
+</dependency>
+
+<dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-text</artifactId>
+    <version>1.11.0</version>
+</dependency>
+
+
+	
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.projectreactor</groupId>
+			<artifactId>reactor-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	
+
+	</dependencies>
+
+    
+ <build>
+	<resources>
+		<resource>
+			<directory>lib</directory>
+			<targetPath>BOOT-INF/lib/</targetPath>
+			<includes>
+				<include>**/*.jar</include>
+			</includes>
+		</resource>
+		<resource>
+			<directory>src/main/resources</directory>
+			<filtering>true</filtering>
+		</resource>
+		<resource>
+			<directory>src/main/java</directory>
+			<includes>
+				<include>**/*.xml</include>
+			</includes>
+			<filtering>true</filtering>
+		</resource>
+	</resources>
+
+
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+            </testResource>
+        </testResources>
+	     <plugins>
+			  
+			  				       
+	       <plugin>
+	       		<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			   <version>${spring-boot-version}</version>
+				<configuration>
+                    <mainClass>com.pentest.PentestAiApplication</mainClass>
+					<!--<fork>true</fork>-->
+					 <layout>ZIP</layout> 
+					<includeSystemScope>true</includeSystemScope>	
+			
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+			</plugin>
+			  
+	     <plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-source-plugin</artifactId>
+			<version>${maven-source-plugin-version}</version>
+			
+			<executions>
+				<execution>
+					<id>attach-sources</id>
+					<phase>verify</phase>
+					<goals>
+						<goal>jar-no-fork</goal>
+					</goals>
+				</execution>
+			</executions>
+			<configuration>
+	         <attach>true</attach>
+	       </configuration>
+		</plugin> 
+		
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-plugin-version}</version>  
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					 <useIncrementalCompilation>true</useIncrementalCompilation>
+					 <encoding>UTF-8</encoding>
+					   <compilerArgs>
+			             <arg>-parameters</arg>
+			        </compilerArgs>
+					<annotationProcessorPaths>
+						<path>
+						<groupId>org.projectlombok</groupId>
+						<artifactId>lombok</artifactId>
+						<version>${lombok-version}</version>
+					</path>
+					
+                  	<!-- MapStruct编译，注解处理器，根据注解自动生成Mapper的实现 -->
+                    <path>
+                        <groupId>org.mapstruct</groupId>
+                        <artifactId>mapstruct-processor</artifactId>
+                        <version>${mapstruct-version}</version>
+                    </path>
+                    
+                    
+
+                </annotationProcessorPaths>
+				</configuration>
+			</plugin> 
+			
+			<plugin>
+		      <groupId>org.apache.maven.plugins</groupId>
+		        <artifactId>maven-surefire-plugin</artifactId>
+		          <version>${maven-surefire-plugin-version}</version>
+		        <configuration>
+		          <skip>true</skip>
+		           <skipTests>true</skipTests>
+		        </configuration>
+		      </plugin>
+	 	      
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>${maven-resources-plugin-version}</version>
+				<configuration>
+					<encoding>UTF-8</encoding>
+					 <nonFilteredFileExtensions>
+					  <nonFilteredFileExtension>dat</nonFilteredFileExtension>
+					  <nonFilteredFileExtension>key</nonFilteredFileExtension>
+					  <nonFilteredFileExtension>eot</nonFilteredFileExtension>
+					  <nonFilteredFileExtension>svg</nonFilteredFileExtension>
+					  <nonFilteredFileExtension>ttf</nonFilteredFileExtension>
+					  <nonFilteredFileExtension>woff</nonFilteredFileExtension>
+					  <nonFilteredFileExtension>woff2</nonFilteredFileExtension> 
+					  <nonFilteredFileExtension>pdf</nonFilteredFileExtension> 
+					</nonFilteredFileExtensions>
+				</configuration>
+			</plugin> 
+
+			
+	  </plugins>
+	  <defaultGoal>clean  compile</defaultGoal>
+</build>    
+</project>

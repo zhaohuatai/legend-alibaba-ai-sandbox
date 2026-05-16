@@ -1,0 +1,27 @@
+目录扫描报告
+================
+
+1. 目录树结构（最多3层）：
+E:\worksapce\sts5.1\legend-smartmind\legend-smartmind\src\test-resources\file-organizer
+├── app.js
+├── application.properties
+├── HelloWorld.java
+├── notes.txt
+├── pom.xml
+├── README.md
+├── script.py
+└── workflow.yml
+
+2. 统计信息：
+- 文件总数：8个
+- 总大小：472字节
+
+3. 按扩展名分类：
+- .js: 1个文件
+- .properties: 1个文件
+- .java: 1个文件
+- .txt: 1个文件
+- .xml: 1个文件
+- .md: 1个文件
+- .py: 1个文件
+- .yml: 1个文件

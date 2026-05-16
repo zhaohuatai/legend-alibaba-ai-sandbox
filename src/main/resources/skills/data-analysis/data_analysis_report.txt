@@ -1,0 +1,51 @@
+=== DATA ANALYSIS REPORT ===
+
+1. DATASET OVERVIEW
+   - Total Records: 10 employees
+   - Columns: name, age, department, salary, performance
+   - Data Source: sample_data.csv
+
+2. BASIC STATISTICS
+   - Age Distribution:
+     * Mean Age: 33.70 years
+     * Median Age: 32.00 years
+     * Standard Deviation: 6.25 years
+     * Age Range: 26 - 45 years
+     * Age Groups: 20-29 (3 employees), 30-39 (5 employees), 40+ (2 employees)
+
+   - Salary Distribution:
+     * Mean Salary: $89,800.00
+     * Median Salary: $87,000.00
+     * Standard Deviation: $12,717.44
+     * Salary Range: $72,000 - $115,000
+     * Highest Paid: Ǯʮһ ($115,000)
+     * Lowest Paid:  ($72,000)
+
+3. DEPARTMENT ANALYSIS
+   - Engineering: 4 employees (40.0%)
+     * Average Salary: $98,250.00
+   - Marketing: 3 employees (30.0%)
+     * Average Salary: $85,333.33
+   - Sales: 3 employees (30.0%)
+     * Average Salary: $83,000.00
+
+4. PERFORMANCE EVALUATION
+   - Performance A: 5 employees (50.0%)
+   - Performance B: 4 employees (40.0%)
+   - Performance C: 1 employee (10.0%)
+
+5. KEY INSIGHTS
+   - The Engineering department has the highest average salary ($98,250)
+   - Employees aged 40+ have the highest average salary ($105,000)
+   - Performance A is the most common rating (50% of employees)
+   - There's a positive correlation between age and salary
+   - The salary distribution shows moderate variation (standard deviation ~14% of mean)
+
+6. RECOMMENDATIONS
+   - Consider salary benchmarking for Marketing and Sales departments
+   - Analyze why the oldest employees tend to have higher salaries
+   - Investigate the single 'C' performance rating for potential development opportunities
+   - Monitor age diversity across departments
+
+Report generated on: [CURRENT_DATE]
+Analysis completed successfully.

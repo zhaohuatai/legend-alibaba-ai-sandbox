@@ -1,0 +1,15 @@
+CSV Analysis Report:
+
+1. Column Names and Data Types:
+name (object), age (int64), department (object), salary (int64), performance (object)
+
+2. Number of Rows:
+10
+
+3. First 5 Rows:
+ name  age department  salary performance
+ 张三  28  Engineering   85000         A
+ 李四  35    Marketing   92000         B
+ 王五  31  Engineering   88000         A
+ 赵六  42        Sales   95000         C
+ 孙七  29    Marketing   78000         B

@@ -1,0 +1,32 @@
+
+spring:
+  application:
+    name: pentest-ai
+  main: 
+   allow-circular-references: true
+   allow-bean-definition-overriding: true
+   keep-alive: true #即使所有线程都是虚拟线程，JVM 也会保持运行状态。
+
+  profiles:
+   active: dev
+  # ==================== Spring AI 模型配置 ====================
+  ai:
+    # DashScope (通义千问) — 默认模型提供商
+    dashscope:
+      api-key: sk-38ccc09116cb4720923d8a2fdaece02e
+      chat:
+        options:
+          model: qwen-max
+          #temperature: 0.1  # 渗透测试决策需要低随机性
+          timeout: 1200000  # 20分钟
+#    ollama:
+#     base-url: https:/127.0.0.1:8443
+ #    chat:
+ #     model: modelscope.cn/unsloth/DeepSeek-R1-Distill-Qwen-32B-GGUF:Q4_K_M
+    # 备选：OpenAI 兼容接口（DeepSeek/GPT）
+    # openai:
+    #   api-key: ${OPENAI_API_KEY}
+    #   base-url: https://api.deepseek.com/v1
+    #   chat:
+    #     options:
+    #       model: deepseek-chat
